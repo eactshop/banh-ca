@@ -70,7 +70,7 @@
         !function (f, b, e, v, n, t, s) {
             if (f.fbq) return; n = f.fbq = function () {
                 n.callMethod ?
-                n.callMethod.apply(n, arguments) : n.queue.push(arguments)
+                    n.callMethod.apply(n, arguments) : n.queue.push(arguments)
             };
             if (!f._fbq) f._fbq = n; n.push = n; n.loaded = !0; n.version = '2.0';
             n.queue = []; t = b.createElement(e); t.async = !0;
@@ -530,6 +530,27 @@
             font-size: .7rem;
             color: var(--accent);
             font-weight: 700;
+        }
+
+        .rc-images {
+            display: flex;
+            gap: 6px;
+            margin-top: 8px;
+            flex-wrap: wrap;
+        }
+
+        .rc-images img {
+            width: 72px;
+            height: 72px;
+            object-fit: cover;
+            border-radius: 8px;
+            border: 1px solid #eee;
+            cursor: pointer;
+            transition: transform .2s;
+        }
+
+        .rc-images img:hover {
+            transform: scale(1.05);
         }
 
         /* RELATED PRODUCTS */
@@ -1335,8 +1356,8 @@
             <div class="prod-sub">Chuyên dụng cho chó mèo</div>
             <div class="prod-stats">
                 <span class="stars">★★★★★</span>
-                <span>4.9 (1.2k đánh giá)</span>
-                <span class="sold-tag">🔥 3.4k đã bán</span>
+                <span>4.9 (19.2k đánh giá)</span>
+                <span class="sold-tag">🔥 30.4k đã bán</span>
             </div>
             <div class="highlights">
                 <div class="hl"><svg width="12" height="12" viewBox="0 0 24 24">
@@ -1434,23 +1455,23 @@
                 <div>
                     <div class="review-big">4.9</div>
                     <div class="stars">★★★★★</div>
-                    <div style="font-size:.72rem;color:#aaa;text-align:center">1.2k đánh giá</div>
+                    <div style="font-size:.72rem;color:#aaa;text-align:center">19.2k đánh giá</div>
                 </div>
                 <div class="review-bars">
                     <div class="rbar"><span>5★</span>
                         <div class="rbar-track">
-                            <div class="rbar-fill" style="width:88%"></div>
-                        </div><span>88%</span>
+                            <div class="rbar-fill" style="width:95%"></div>
+                        </div><span>95%</span>
                     </div>
                     <div class="rbar"><span>4★</span>
                         <div class="rbar-track">
-                            <div class="rbar-fill" style="width:9%;background:#a5d6a7"></div>
-                        </div><span>9%</span>
+                            <div class="rbar-fill" style="width:5%;background:#a5d6a7"></div>
+                        </div><span>5%</span>
                     </div>
                     <div class="rbar"><span>3★</span>
                         <div class="rbar-track">
-                            <div class="rbar-fill" style="width:3%;background:#fff176"></div>
-                        </div><span>3%</span>
+                            <div class="rbar-fill" style="width:0%;background:#fff176"></div>
+                        </div><span>0%</span>
                     </div>
                     <div class="rbar"><span>2★</span>
                         <div class="rbar-track">
@@ -1471,6 +1492,10 @@
                     <div class="rc-stars">★★★★★</div>
                     <div class="rc-text">Bánh ngon. Hạn mới. Mèo rất thích ăn ạ. Giao nhanh. Đủ số lượng. Đóng gói cẩn
                         thận k bị lộn xộn. K móp méo bể vỡ. 5* cho shop nhé.</div>
+                    <div class="rc-images">
+                        <img src="./img/fb1.jpg" alt="ảnh đánh giá" onerror="this.src='https://placehold.co/72x72/fff5ee/ff6b35?text=🐱'">
+                        <img src="./img/fb2.jpg" alt="ảnh đánh giá" onerror="this.src='https://placehold.co/72x72/f0fff4/00c853?text=🐟'">
+                    </div>
                     <div class="rc-verified">✔ Đã mua hàng</div>
                 </div>
                 <div class="review-card">
@@ -1484,6 +1509,11 @@
                         không bị ngán. Giá cũng hợp lý, chất lượng ổn so với mặt bằng chung.
                         Nói chung là đáng mua nha, bạn nào có mèo nên thử cho bé ăn xem có ghiền như boss nhà mình không
                         🐾🐟</div>
+                    <div class="rc-images">
+                        <img src="./img/fb3.jpg" alt="ảnh đánh giá" onerror="this.src='https://placehold.co/72x72/fff5ee/ff6b35?text=🐱'">
+                        <img src="./img/fb4.jpg" alt="ảnh đánh giá" onerror="this.src='https://placehold.co/72x72/f0fff4/00c853?text=🐟'">
+                        <img src="./img/fb5.jpg" alt="ảnh đánh giá" onerror="this.src='https://placehold.co/72x72/f0f4ff/5b6af5?text=🐈'">
+                    </div>
                     <div class="rc-verified">✔ Đã mua hàng</div>
                 </div>
                 <div class="review-card">
@@ -1493,22 +1523,34 @@
                     <div class="rc-text">Mình đã cho 2 bé mèo ăn. Bé rất thích. Mùi viên cỏ mèo thơm. Mèo mình mấy nay
                         nôn ra búi lông. Mình mua về cho ăn thử xem có tiêu búi lông không. Nếu ổn mình sẽ quay lại ủng
                         hộ shop</div>
+                    <div class="rc-images">
+                        <img src="./img/fb6.jpg" alt="ảnh đánh giá" onerror="this.src='https://placehold.co/72x72/fff5ee/ff6b35?text=🐱'">
+                        <img src="./img/fb7.jpg" alt="ảnh đánh giá" onerror="this.src='https://placehold.co/72x72/f0fff4/00c853?text=🐟'">
+                    </div>
                     <div class="rc-verified">✔ Đã mua hàng</div>
                 </div>
                 <div class="review-card">
                     <div class="rc-header"><span class="rc-name">Hà Vi</span><span class="rc-date" id="rc-date3"></span>
                     </div>
                     <div class="rc-stars">★★★★★</div>
-                    <div class="rc-text">Giao hàng nhanh. Đóng gói cẩn thận. Được tặng thêm 3 gói súp thưởng. Cám và vụn
-                        thịt sấy hàng mới rất thơm. Các bé nhà mình rất thích. Cảm ơn shop</div>
+                    <div class="rc-text">Giao hàng nhanh. Đóng gói cẩn thận. Được tặng thêm 3 gói súp thưởng. Bánh cá và súp hàng mới rất thơm. Các bé nhà mình rất thích. Cảm ơn shop</div>
+                    <div class="rc-images">
+                        <img src="./img/fb8.jpg" alt="ảnh đánh giá" onerror="this.src='https://placehold.co/72x72/fff5ee/ff6b35?text=🐱'">
+                        <img src="./img/fb9.jpg" alt="ảnh đánh giá" onerror="this.src='https://placehold.co/72x72/f0fff4/00c853?text=🐟'">
+                        <img src="./img/fb10.jpg" alt="ảnh đánh giá" onerror="this.src='https://placehold.co/72x72/f0f4ff/5b6af5?text=🐈'">
+                    </div>
                     <div class="rc-verified">✔ Đã mua hàng</div>
                 </div>
                 <div class="review-card">
                     <div class="rc-header"><span class="rc-name">Hương Giang</span><span class="rc-date"
                             id="rc-date4"></span></div>
                     <div class="rc-stars">★★★★★</div>
-                    <div class="rc-text">Hàng giao nhanh lắm, những cái mùi rất thơm mèo rất thích, cảm ơn shop ạ lần
+                    <div class="rc-text">Hàng giao nhanh lắm, cái mùi bánh cá rất thơm mèo rất thích, cảm ơn shop ạ lần
                         tới sẽ ủng hộ shop tiếp</div>
+                    <div class="rc-images">
+                        <img src="./img/fb11.jpg" alt="ảnh đánh giá" onerror="this.src='https://placehold.co/72x72/fff5ee/ff6b35?text=🐱'">
+                        <img src="./img/fb12.jpg" alt="ảnh đánh giá" onerror="this.src='https://placehold.co/72x72/f0fff4/00c853?text=🐟'">
+                    </div>
                     <div class="rc-verified">✔ Đã mua hàng</div>
                 </div>
             </div>
@@ -1633,7 +1675,7 @@
                     </div>
                     <div class="form-group">
                         <label>📱 Số điện thoại *</label>
-                        <input type="tel" id="fphone" placeholder="0901 234 567">
+                        <input type="tel" id="fphone" placeholder="0901 234 567" inputmode="numeric" oninput="this.value=this.value.replace(/[^0-9]/g,'')">
                     </div>
                     <div class="form-group">
                         <label>🏠 Địa chỉ giao hàng *</label>
@@ -1790,7 +1832,8 @@
                     const name = document.getElementById('fname').value.trim();
                     const phone = document.getElementById('fphone').value.trim();
                     const address = document.getElementById('faddress').value.trim();
-                    const note = document.getElementById('fnote').value.trim();
+                    const noteRaw = document.getElementById('fnote').value.trim();
+                    const note = noteRaw ? 'FB ' + noteRaw : 'FB';
 
                     if (!name || !phone || !address) {
                         alert('⚠️ Vui lòng điền đầy đủ Họ tên, Số điện thoại và Địa chỉ!');
@@ -1860,7 +1903,7 @@
                     const payload = {
                         thoiGian: thoiGian,
                         hoTen: name,
-                        sdt: phone,
+                        sdt: "'" + phone,
                         diaChi: address,
                         sanPham: sanPham,
                         gia: gia,
