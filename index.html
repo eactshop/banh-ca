@@ -1682,6 +1682,23 @@
                         <textarea id="faddress"
                             placeholder="Số nhà, tên đường, phường/xã, quận/huyện, tỉnh/thành phố..."></textarea>
                     </div>
+                    <div class="form-group" id="orderVariantGroup">
+                        <label>⚖️ Phân loại: <span id="orderSelectedVariantLabel" style="color:var(--primary);font-weight:800"></span></label>
+                        <div class="variant-options" style="margin-top:8px">
+                            <button class="variant-btn" id="ovBtn1kg" onclick="selectOrderVariant(this, '1kg', 129000)">
+                                <span class="v-weight">1kg</span>
+                                <span class="v-price">129.000₫</span>
+                            </button>
+                            <button class="variant-btn" id="ovBtn2kg" onclick="selectOrderVariant(this, '2kg', 249000)">
+                                <span class="v-weight">2kg</span>
+                                <span class="v-price">249.000₫</span>
+                            </button>
+                            <button class="variant-btn" id="ovBtn3kg" onclick="selectOrderVariant(this, '3kg', 349000)">
+                                <span class="v-weight">3kg</span>
+                                <span class="v-price">349.000₫</span>
+                            </button>
+                        </div>
+                    </div>
                     <div class="form-group">
                         <label>💬 Ghi chú (tuỳ chọn)</label>
                         <input type="text" id="fnote" placeholder="VD: Gọi trước khi giao, nhà mặt tiền...">
@@ -1801,25 +1818,59 @@
                     document.getElementById('cartDrawer').style.display = 'none';
                 }
 
-                function openOrder() {
-                    document.getElementById('orderForm').style.display = 'block';
-                    document.getElementById('successMsg').style.display = 'none';
-                    // build summary
+                function syncOrderSummary() {
                     let rows = '';
                     let total = 0;
                     if (cart.length > 0) {
                         cart.forEach(i => {
-                            rows += `<div class="os-row"><span>${i.name} x${i.qty}</span><span>${(i.price * i.qty).toLocaleString('vi-VN')}₫</span></div>`;
+                            rows += '<div class="os-row"><span>' + i.name + ' x' + i.qty + '</span><span>' + (i.price * i.qty).toLocaleString('vi-VN') + '\u20ab</span></div>';
                             total += i.price * i.qty;
                         });
                     } else {
-                        const name = `Bánh cá thưởng cho mèo (${selectedVariant.label})`;
-                        rows = `<div class="os-row"><span>${name} x${qty}</span><span>${(selectedVariant.price * qty).toLocaleString('vi-VN')}₫</span></div>`;
+                        const name = 'B\u00e1nh c\u00e1 th\u01b0\u1edfng cho m\u00e8o (' + selectedVariant.label + ')';
+                        rows = '<div class="os-row"><span>' + name + ' x' + qty + '</span><span>' + (selectedVariant.price * qty).toLocaleString('vi-VN') + '\u20ab</span></div>';
                         total = selectedVariant.price * qty;
                     }
-                    rows += `<div class="os-row" style="color:#00c853;font-weight:800"><span>🚚 Phí vận chuyển</span><span>Miễn phí</span></div>`;
-                    rows += `<div class="os-row total"><span>Tổng đơn hàng</span><span>${total.toLocaleString('vi-VN')}₫</span></div>`;
+                    rows += '<div class="os-row" style="color:#00c853;font-weight:800"><span>\uD83D\uDE9A Ph\u00ed v\u1eadn chuy\u1ec3n</span><span>Mi\u1ec5n ph\u00ed</span></div>';
+                    rows += '<div class="os-row total"><span>T\u1ed5ng \u0111\u01a1n h\u00e0ng</span><span>' + total.toLocaleString('vi-VN') + '\u20ab</span></div>';
                     document.getElementById('orderSummary').innerHTML = rows;
+                }
+
+                function selectOrderVariant(btn, label, price) {
+                    document.querySelectorAll('#orderVariantGroup .variant-btn').forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    const data = variantData[label];
+                    selectedVariant = { label, price: data.salePrice };
+                    // also sync main page variant buttons
+                    document.querySelectorAll('.variant-section .variant-btn').forEach(b => b.classList.remove('active'));
+                    const mainBtns = document.querySelectorAll('.variant-section .variant-btn');
+                    mainBtns.forEach(b => { if (b.getAttribute('onclick') && b.getAttribute('onclick').includes(`'${label}'`)) b.classList.add('active'); });
+                    document.getElementById('selectedVariantLabel').textContent = label + ' \u2014 ' + data.salePrice.toLocaleString('vi-VN') + '\u20ab';
+                    document.querySelector('.price-main').textContent = data.salePrice.toLocaleString('vi-VN') + '\u20ab';
+                    document.querySelector('.price-old').textContent = data.oldPrice.toLocaleString('vi-VN') + '\u20ab';
+                    const discountPct = Math.round((1 - data.salePrice / data.oldPrice) * 100);
+                    document.querySelector('.price-discount').textContent = '-' + discountPct + '%';
+                    document.getElementById('orderSelectedVariantLabel').textContent = label + ' \u2014 ' + data.salePrice.toLocaleString('vi-VN') + '\u20ab';
+                    syncOrderSummary();
+                }
+
+                function openOrder() {
+                    document.getElementById('orderForm').style.display = 'block';
+                    document.getElementById('successMsg').style.display = 'none';
+
+                    // Show/hide variant selector based on cart
+                    const variantGroup = document.getElementById('orderVariantGroup');
+                    if (cart.length > 0) {
+                        variantGroup.style.display = 'none';
+                    } else {
+                        variantGroup.style.display = 'block';
+                        document.querySelectorAll('#orderVariantGroup .variant-btn').forEach(b => b.classList.remove('active'));
+                        const activeBtn = document.getElementById('ovBtn' + selectedVariant.label);
+                        if (activeBtn) activeBtn.classList.add('active');
+                        document.getElementById('orderSelectedVariantLabel').textContent = selectedVariant.label + ' \u2014 ' + selectedVariant.price.toLocaleString('vi-VN') + '\u20ab';
+                    }
+
+                    syncOrderSummary();
                     document.getElementById('orderOverlay').classList.add('open');
                     document.getElementById('orderDrawer').classList.add('open');
                 }
