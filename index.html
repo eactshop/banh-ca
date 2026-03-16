@@ -1965,25 +1965,34 @@
                         maDon: '#' + orderCode
                     };
 
-                    // Reset cart
+                    const bodyStr = JSON.stringify(payload);
+
+                    // Ưu tiên sendBeacon — đảm bảo gửi dù trang navigate đi
+                    let sent = false;
+                    if (navigator.sendBeacon) {
+                        const blob = new Blob([bodyStr], { type: 'text/plain' });
+                        sent = navigator.sendBeacon(SHEET_URL, blob);
+                    }
+
+                    // Fallback: fetch keepalive nếu sendBeacon thất bại
+                    if (!sent) {
+                        fetch(SHEET_URL, {
+                            method: 'POST',
+                            mode: 'no-cors',
+                            keepalive: true,
+                            headers: { 'Content-Type': 'text/plain' },
+                            body: bodyStr
+                        }).catch(() => { });
+                    }
+
+                    // Reset cart SAU khi đã gửi request
                     cart = [];
                     updateCartUI();
 
-                    // fetch + keepalive: browser giữ request sống dù trang navigate đi
-                    // Content-Type: text/plain bắt buộc với mode no-cors
-                    // Apps Script vẫn đọc được JSON qua e.postData.contents
-                    fetch(SHEET_URL, {
-                        method: 'POST',
-                        mode: 'no-cors',
-                        keepalive: true,
-                        headers: { 'Content-Type': 'text/plain' },
-                        body: JSON.stringify(payload)
-                    }).catch(() => { });
-
-                    // Chờ 600ms cho fetch khởi tạo xong rồi redirect
+                    // Chờ 1200ms để đảm bảo request được gửi trước khi redirect
                     setTimeout(() => {
                         window.location.href = 'https://eactshop.github.io/banh-ca-thanh-cong/';
-                    }, 600);
+                    }, 1200);
                 }
 
                 // Auto-slideshow
