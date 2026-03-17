@@ -1086,6 +1086,23 @@
             background: #f9f9f9;
         }
 
+        .v-gift {
+            font-size: .62rem;
+            color: #00796b;
+            font-weight: 700;
+            background: #e8f5e9;
+            border-radius: 6px;
+            padding: 1px 5px;
+            margin-top: 1px;
+            text-align: center;
+            line-height: 1.4;
+        }
+
+        .variant-btn.active .v-gift {
+            background: #fff0f3;
+            color: var(--primary);
+        }
+
         /* FLASH SALE BANNER */
         .flash-sale-banner {
             background: linear-gradient(90deg, #ff2d55, #ff6b35);
@@ -1386,15 +1403,22 @@
                 <div class="variant-options">
                     <button class="variant-btn active" onclick="selectVariant(this, '1kg', 129000)">
                         <span class="v-weight">1kg</span>
-                        <span class="v-price">129.000₫</span>
+                        <span class="v-price">129.000&#8363;</span>
                     </button>
                     <button class="variant-btn" onclick="selectVariant(this, '2kg', 249000)">
                         <span class="v-weight">2kg</span>
-                        <span class="v-price">249.000₫</span>
+                        <span class="v-price">249.000&#8363;</span>
+                        <span class="v-gift">&#127873; +10 thanh s&uacute;p</span>
                     </button>
                     <button class="variant-btn" onclick="selectVariant(this, '3kg', 349000)">
                         <span class="v-weight">3kg</span>
-                        <span class="v-price">349.000₫</span>
+                        <span class="v-price">349.000&#8363;</span>
+                        <span class="v-gift">&#127873; +1 lon pate s&#7883;n</span>
+                    </button>
+                    <button class="variant-btn" onclick="selectVariant(this, '4kg', 449000)">
+                        <span class="v-weight">4kg</span>
+                        <span class="v-price">449.000&#8363;</span>
+                        <span class="v-gift">&#127873; +10 s&uacute;p &amp; pate s&#7883;n</span>
                     </button>
                 </div>
             </div>
@@ -1417,7 +1441,7 @@
                 + Giàu taurine và chất dinh dưỡng khác giúp tốt cho mắt và mượt lông <br>
                 + Giúp xương chắc khỏe,tăng sức đề kháng <br>
                 + Công thức chế biến ít chất béo giúp mèo duy trì cơ thể lý tưởng <br>
-                + Quy cách : 1KG, 2KG, 3KG,...
+                + Quy cách : 1KG, 2KG, 3KG, 4KG
             </ul>
 
             <div style="margin-top:14px">
@@ -1687,15 +1711,22 @@
                         <div class="variant-options" style="margin-top:8px">
                             <button class="variant-btn" id="ovBtn1kg" onclick="selectOrderVariant(this, '1kg', 129000)">
                                 <span class="v-weight">1kg</span>
-                                <span class="v-price">129.000₫</span>
+                                <span class="v-price">129.000&#8363;</span>
                             </button>
                             <button class="variant-btn" id="ovBtn2kg" onclick="selectOrderVariant(this, '2kg', 249000)">
                                 <span class="v-weight">2kg</span>
-                                <span class="v-price">249.000₫</span>
+                                <span class="v-price">249.000&#8363;</span>
+                                <span class="v-gift">&#127873; +10 thanh s&uacute;p</span>
                             </button>
                             <button class="variant-btn" id="ovBtn3kg" onclick="selectOrderVariant(this, '3kg', 349000)">
                                 <span class="v-weight">3kg</span>
-                                <span class="v-price">349.000₫</span>
+                                <span class="v-price">349.000&#8363;</span>
+                                <span class="v-gift">&#127873; +1 lon pate s&#7883;n</span>
+                            </button>
+                            <button class="variant-btn" id="ovBtn4kg" onclick="selectOrderVariant(this, '4kg', 449000)">
+                                <span class="v-weight">4kg</span>
+                                <span class="v-price">449.000&#8363;</span>
+                                <span class="v-gift">&#127873; +10 s&uacute;p &amp; pate s&#7883;n</span>
                             </button>
                         </div>
                     </div>
@@ -1723,6 +1754,7 @@
                     '1kg': { salePrice: 129000, oldPrice: 249000 },
                     '2kg': { salePrice: 249000, oldPrice: 499000 },
                     '3kg': { salePrice: 349000, oldPrice: 749000 },
+                    '4kg': { salePrice: 449000, oldPrice: 899000 },
                 };
 
                 function selectVariant(btn, label, price) {
@@ -1911,7 +1943,12 @@
                                 const kgMatch = n.match(/([\d,\.]+)\s*kg/);
                                 const kg = kgMatch ? parseFloat(kgMatch[1].replace(',', '.')) : 1;
                                 totalWeight += kg * q;
-                                totalCod += kg * q * 50000;
+                                // 4kg has special COD price 220k
+                                if (kg === 4) {
+                                    totalCod += q * 220000;
+                                } else {
+                                    totalCod += kg * q * 50000;
+                                }
                             } else if (n.includes('kawaicat') || n.includes('hạt')) {
                                 // 1.5kg bag
                                 totalWeight += 1.5 * q;
