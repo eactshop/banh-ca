@@ -1967,15 +1967,28 @@
                         return { cod: totalCod, weight: totalWeight };
                     }
 
+                    // Map variant label to gift description
+                    const giftMap = {
+                        '1kg': '',
+                        '2kg': '[Tặng: 10 thanh súp]',
+                        '3kg': '[Tặng: 1 lon pate sịn]',
+                        '4kg': '[Tặng: 10 thanh súp + 1 lon pate sịn]',
+                    };
+
                     // Build product + price summary
                     let sanPham, gia, orderItems;
                     if (cart.length > 0) {
                         orderItems = cart;
-                        sanPham = cart.map(i => `${i.name} x${i.qty}`).join(', ');
+                        sanPham = cart.map(i => {
+                            const labelMatch = i.name.match(/\((\d+kg)\)/);
+                            const gift = labelMatch ? (giftMap[labelMatch[1]] || '') : '';
+                            return `${i.name} x${i.qty}${gift ? ' ' + gift : ''}`;
+                        }).join(', ');
                         gia = cart.reduce((s, i) => s + i.price * i.qty, 0);
                     } else {
+                        const gift = giftMap[selectedVariant.label] || '';
                         orderItems = [{ name: `Bánh cá thưởng cho mèo (${selectedVariant.label})`, price: selectedVariant.price, qty: qty }];
-                        sanPham = `Bánh cá thưởng cho mèo (${selectedVariant.label}) x${qty}`;
+                        sanPham = `Bánh cá thưởng cho mèo (${selectedVariant.label}) x${qty}${gift ? ' ' + gift : ''}`;
                         gia = selectedVariant.price * qty;
                     }
 
