@@ -2090,6 +2090,157 @@
                 document.getElementById("rc-date3").textContent = formattedDate;
                 document.getElementById("rc-date4").textContent = formattedDate;
             </script>
+
+<!-- FAKE BUYER NOTIFICATION -->
+<style>
+    #buyer-notif {
+        position: fixed;
+        bottom: 90px;
+        left: 12px;
+        z-index: 9999;
+        background: #fff;
+        border-radius: 14px;
+        box-shadow: 0 6px 24px rgba(0,0,0,.18);
+        padding: 10px 14px 10px 12px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        max-width: 290px;
+        min-width: 220px;
+        transform: translateX(-120%);
+        transition: transform .45s cubic-bezier(.34,1.56,.64,1);
+        border-left: 4px solid #ff2d55;
+    }
+    #buyer-notif.show {
+        transform: translateX(0);
+    }
+    .bn-avatar {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #ff2d55, #ff6d00);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.3rem;
+        flex-shrink: 0;
+    }
+    .bn-content {
+        flex: 1;
+        min-width: 0;
+    }
+    .bn-name {
+        font-weight: 800;
+        font-size: .82rem;
+        color: #1a1a1a;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+    .bn-action {
+        font-size: .75rem;
+        color: #666;
+        margin-top: 1px;
+    }
+    .bn-action span {
+        color: #ff2d55;
+        font-weight: 700;
+    }
+    .bn-time {
+        font-size: .68rem;
+        color: #aaa;
+        margin-top: 2px;
+    }
+    .bn-close {
+        position: absolute;
+        top: 6px;
+        right: 8px;
+        font-size: .7rem;
+        color: #bbb;
+        cursor: pointer;
+        line-height: 1;
+        padding: 2px 4px;
+    }
+    .bn-dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: #00c853;
+        animation: bnPulse 1.2s infinite;
+        flex-shrink: 0;
+    }
+    @keyframes bnPulse {
+        0%, 100% { opacity: 1; transform: scale(1); }
+        50% { opacity: .5; transform: scale(1.4); }
+    }
+</style>
+
+<div id="buyer-notif">
+    <div class="bn-avatar" id="bn-avatar">😺</div>
+    <div class="bn-content">
+        <div class="bn-name" id="bn-name">Nguyễn Thị Lan</div>
+        <div class="bn-action" id="bn-action">vừa đặt mua <span id="bn-product">Bánh cá 2kg</span></div>
+        <div class="bn-time" id="bn-time">2 phút trước · TP.HCM</div>
+    </div>
+    <div class="bn-dot"></div>
+    <span class="bn-close" onclick="document.getElementById('buyer-notif').classList.remove('show')">✕</span>
+</div>
+
+<script>
+(function() {
+    const names = [
+        'Nguyễn Thị Lan', 'Trần Minh Hải', 'Lê Thu Hương', 'Phạm Văn Đức',
+        'Hoàng Thị Mai', 'Vũ Quang Huy', 'Đặng Thị Nga', 'Bùi Minh Tuấn',
+        'Đỗ Thị Linh', 'Ngô Văn Khoa', 'Trịnh Thị Hồng', 'Lý Minh Khôi',
+        'Phan Thị Bích', 'Cao Văn Thắng', 'Mai Thị Yến', 'Đinh Quốc Bảo',
+        'Lưu Thị Kim', 'Tăng Minh Phúc', 'Hồ Thị Thảo', 'Dương Văn Long'
+    ];
+    const products = [
+        'Bánh cá 1kg', 'Bánh cá 2kg 🎁', 'Bánh cá 3kg 🎁', 'Bánh cá 4kg 🎁🎁'
+    ];
+    const cities = [
+        'Hà Nội', 'TP.HCM', 'Đà Nẵng', 'Cần Thơ', 'Hải Phòng',
+        'Huế', 'Nha Trang', 'Biên Hoà', 'Vũng Tàu', 'Long Xuyên',
+        'Buôn Ma Thuột', 'Quy Nhơn', 'Thái Nguyên', 'Bắc Ninh', 'Bình Dương'
+    ];
+    const emojis = ['😸','🐱','🐾','😺','🐈','😻','🐈‍⬛','🙀'];
+    const times = ['15 giây trước', '20 giây trước', '30 giây trước', '40 giây trước', '45 giây trước', '50 giây trước', '1 phút trước'];
+
+    const notif = document.getElementById('buyer-notif');
+    const bnName = document.getElementById('bn-name');
+    const bnProduct = document.getElementById('bn-product');
+    const bnTime = document.getElementById('bn-time');
+    const bnAvatar = document.getElementById('bn-avatar');
+
+    let notifTimer;
+
+    function showNotif() {
+        const name = names[Math.floor(Math.random() * names.length)];
+        const product = products[Math.floor(Math.random() * products.length)];
+        const city = cities[Math.floor(Math.random() * cities.length)];
+        const time = times[Math.floor(Math.random() * times.length)];
+        const emoji = emojis[Math.floor(Math.random() * emojis.length)];
+
+        bnName.textContent = name;
+        bnProduct.textContent = product;
+        bnTime.textContent = time + ' · ' + city;
+        bnAvatar.textContent = emoji;
+
+        notif.classList.add('show');
+
+        clearTimeout(notifTimer);
+        notifTimer = setTimeout(() => {
+            notif.classList.remove('show');
+        }, 4500);
+    }
+
+    // Lần đầu hiện sau 4 giây, sau đó lặp lại mỗi 15 giây
+    setTimeout(() => {
+        showNotif();
+        setInterval(showNotif, 15000);
+    }, 4000);
+})();
+</script>
 </body>
 
 </html>
