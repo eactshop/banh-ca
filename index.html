@@ -1404,6 +1404,7 @@
                     <button class="variant-btn active" onclick="selectVariant(this, '1kg', 129000)">
                         <span class="v-weight">1kg</span>
                         <span class="v-price">129.000&#8363;</span>
+                        <span class="v-gift">🚚 +20k ship</span>
                     </button>
                     <button class="variant-btn" onclick="selectVariant(this, '2kg', 249000)">
                         <span class="v-weight">2kg</span>
@@ -1712,6 +1713,7 @@
                             <button class="variant-btn" id="ovBtn1kg" onclick="selectOrderVariant(this, '1kg', 129000)">
                                 <span class="v-weight">1kg</span>
                                 <span class="v-price">129.000&#8363;</span>
+                                <span class="v-gift">🚚 +20k ship</span>
                             </button>
                             <button class="variant-btn" id="ovBtn2kg" onclick="selectOrderVariant(this, '2kg', 249000)">
                                 <span class="v-weight">2kg</span>
@@ -1853,17 +1855,38 @@
                 function syncOrderSummary() {
                     let rows = '';
                     let total = 0;
+                    let has1kg = false;
+                    let giftLabel = '';
+                    const giftDisplay = {
+                        '2kg': '🎁 10 thanh súp Gemluck',
+                        '3kg': '🎁 1 lon pate sịn',
+                        '4kg': '🎁 10 thanh súp + 1 lon pate sịn',
+                    };
                     if (cart.length > 0) {
                         cart.forEach(i => {
                             rows += '<div class="os-row"><span>' + i.name + ' x' + i.qty + '</span><span>' + (i.price * i.qty).toLocaleString('vi-VN') + '\u20ab</span></div>';
                             total += i.price * i.qty;
+                            if (i.name.toLowerCase().includes('1kg')) has1kg = true;
+                            const lm = i.name.match(/\((\d+kg)\)/);
+                            if (lm && giftDisplay[lm[1]]) giftLabel = giftDisplay[lm[1]];
                         });
                     } else {
                         const name = 'B\u00e1nh c\u00e1 th\u01b0\u1edfng cho m\u00e8o (' + selectedVariant.label + ')';
                         rows = '<div class="os-row"><span>' + name + ' x' + qty + '</span><span>' + (selectedVariant.price * qty).toLocaleString('vi-VN') + '\u20ab</span></div>';
                         total = selectedVariant.price * qty;
+                        if (selectedVariant.label === '1kg') has1kg = true;
+                        giftLabel = giftDisplay[selectedVariant.label] || '';
                     }
-                    rows += '<div class="os-row" style="color:#00c853;font-weight:800"><span>\uD83D\uDE9A Ph\u00ed v\u1eadn chuy\u1ec3n</span><span>Mi\u1ec5n ph\u00ed</span></div>';
+                    if (giftLabel) {
+                        rows += '<div class="os-row" style="color:#ff6d00;font-weight:800"><span>' + giftLabel + '</span><span>Miễn phí</span></div>';
+                    }
+                    const shipFee = has1kg ? 20000 : 0;
+                    if (shipFee > 0) {
+                        rows += '<div class="os-row" style="color:#ff6d00;font-weight:800"><span>\uD83D\uDE9A Ph\u00ed v\u1eadn chuy\u1ec3n</span><span>' + shipFee.toLocaleString('vi-VN') + '\u20ab</span></div>';
+                        total += shipFee;
+                    } else {
+                        rows += '<div class="os-row" style="color:#00c853;font-weight:800"><span>\uD83D\uDE9A Ph\u00ed v\u1eadn chuy\u1ec3n</span><span>Mi\u1ec5n ph\u00ed</span></div>';
+                    }
                     rows += '<div class="os-row total"><span>T\u1ed5ng \u0111\u01a1n h\u00e0ng</span><span>' + total.toLocaleString('vi-VN') + '\u20ab</span></div>';
                     document.getElementById('orderSummary').innerHTML = rows;
                 }
@@ -1943,9 +1966,14 @@
                                 const kgMatch = n.match(/([\d,\.]+)\s*kg/);
                                 const kg = kgMatch ? parseFloat(kgMatch[1].replace(',', '.')) : 1;
                                 totalWeight += kg * q;
-                                // 4kg has special COD price 220k
                                 if (kg === 4) {
-                                    totalCod += q * 220000;
+                                    totalCod += q * 210000;
+                                } else if (kg === 3) {
+                                    totalCod += q * 155000;
+                                } else if (kg === 2) {
+                                    totalCod += q * 105000;
+                                } else if (kg === 1) {
+                                    totalCod += q * 50000; // 1kg = 50k COD
                                 } else {
                                     totalCod += kg * q * 50000;
                                 }
@@ -1985,11 +2013,16 @@
                             return `${i.name} x${i.qty}${gift ? ' ' + gift : ''}`;
                         }).join(', ');
                         gia = cart.reduce((s, i) => s + i.price * i.qty, 0);
+                        // Cộng 20k ship nếu có sản phẩm 1kg trong giỏ
+                        const has1kgInCart = cart.some(i => i.name.toLowerCase().includes('1kg'));
+                        if (has1kgInCart) gia += 20000;
                     } else {
                         const gift = giftMap[selectedVariant.label] || '';
                         orderItems = [{ name: `Bánh cá thưởng cho mèo (${selectedVariant.label})`, price: selectedVariant.price, qty: qty }];
                         sanPham = `Bánh cá thưởng cho mèo (${selectedVariant.label}) x${qty}${gift ? ' ' + gift : ''}`;
                         gia = selectedVariant.price * qty;
+                        // Cộng 20k ship nếu là 1kg
+                        if (selectedVariant.label === '1kg') gia += 20000;
                     }
 
                     const { cod, weight } = calcCodAndWeight(orderItems);
